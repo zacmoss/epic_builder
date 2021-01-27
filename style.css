@@ -1,0 +1,12 @@
+#main_container {
+    display: flex;
+    border: 3px green solid;
+}
+#side_nav {
+    width: 20%;
+    border: 2px blue solid;
+}
+#main_view {
+    width: 80%;
+    border: 2px red solid;
+}

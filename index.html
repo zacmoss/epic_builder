@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="style.css">
+    <title>Epic Builder</title>
+  </head>
+  <body>
+    <div>
+      Version <span id="app-version"></span>
+    </div>
+    <h1>Epic Builder</h1>
+    <div>
+    We are using Node.js <span id="node-version"></span>,
+    Chromium <span id="chrome-version"></span>,
+    and Electron <span id="electron-version"></span>.
+    </div>
+
+    <div>
+    <button id="add_epic_button">Create Epic</button>
+    <button id="update_epic_button">Update Epic</button>
+    <button id="delete_epic_button">Delete Epic</button>
+    <button id="home_button">Home</button>
+    </div>
+
+    <div id="main_container">
+      <div id="side_nav"></div>
+      <!--<div id="main_view"></div>-->
+
+      <!-- Home Page With Recent Epic -->
+      <div id="epic_page">
+        <p id="epic_page_epic_name"></p>
+        <p id="epic_page_epic_description"></p>
+      </div>
+
+      <!-- Create Epic Form -->
+      <div id="create_epic_page">
+        <!--<form action="/action_page.php">-->
+            <label for="create_epic_page_title_input">Title:</label>
+            <input type="text" id="create_epic_page_title_input">
+            
+            <label for="create_epic_page_description_input">Description:</label>
+            <input type="text" id="create_epic_page_description_input">
+            
+            <button id="create_epic_button">Create Epic</button>
+            <!--<input type="submit" />-->
+        <!--</form>-->
+      </div>
+
+    </div>
+
+    
+
+    <!-- You can also require other files to run in this process -->
+    <script type="module" src="./renderer.js"></script>
+  </body>
+</html>
