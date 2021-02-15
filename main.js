@@ -42,22 +42,12 @@ app.whenReady().then(() => {
   })
 
 
-  /*
-  app.on('add-epic', function() {
-    // here do something
-    let path = './data/epics/'
-    let student = { 
-      name: 'Mike',
-      age: 23, 
-      gender: 'Male',
-      department: 'English',
-      car: 'Honda' 
-  };
-   
-  fs.writeFileSync(path.resolve(path, 'test.json'), JSON.stringify(student));
-  })
-  */
 
+
+
+
+
+  // GET EPICS LOGIC
   ipcMain.on('get-epics', (event, arg) => {
     const fs = require('fs');
     var filepath = "./data/epics/";
@@ -80,9 +70,20 @@ app.whenReady().then(() => {
       console.log(objArr)
       event.sender.send('asynchronous-reply', objArr)
     })
+    /*
+    var epics = getAllEpics()
+    console.log('all epics')
+    console.log(epics)
+    event.sender.send('asynchronous-reply', epics)
+    */
   })
 
- 
+
+
+
+
+
+ // ADD EPIC LOGIC
  ipcMain.on('add-epic', (event, arg) => {
   const fs = require('fs');
 
@@ -91,8 +92,6 @@ app.whenReady().then(() => {
 
   // TODO: assign an epic id on random number generation
   // TODO: but check all current ids and if rando isn't currently in use, use it, else generate rando again
-
-
 
   try {
     fs.writeFileSync(path.resolve(filepath, epic_name), JSON.stringify(arg))
@@ -123,29 +122,60 @@ app.whenReady().then(() => {
   }
  })
 
+
+
+
+
+
+ // UPDATE EPIC LOGIC
  ipcMain.on('update-epic', (event, arg) => {
+   console.log('request to update epic')
+   console.log(arg)
   let filepath = './data/epics/'
-  let epic_name = getEpicNaming(arg)
+  let old_epic_name = getOldEpicNaming(arg)
+  //let new_data = arg
+  delete arg['old_name']
   try {
-    fs.writeFileSync(path.resolve(filepath, epic_name), JSON.stringify(arg))
+    fs.unlinkSync(filepath + old_epic_name);
+    console.log('successfully deleted ' + filepath + old_epic_name);
+    let new_epic_name = getEpicNaming(arg)
+    fs.writeFileSync(path.resolve(filepath, new_epic_name), JSON.stringify(arg))
+    console.log('successfully updated epic')
+    event.sender.send('asynchronous-reply-updated-epic', 1)
   } catch (err) {
     console.log('error updating epic')
     console.log(err)
+    event.sender.send('asynchronous-reply-updated-epic', 0)
   }
  })
 
+
+
+
+
+ // DELETE EPIC LOGIC
  ipcMain.on('delete-epic', (event, arg) => {
   let filepath = './data/epics/'
   let epic_name = getEpicNaming(arg)
   try {
     fs.unlinkSync(filepath + epic_name);
     console.log('successfully deleted ' + filepath + epic_name);
+
+    // SHOULD I ADD GET EPIC LOGIC HERE RATHER THAN ANOTHER SERVER REQUEST FROM FRONT END?
+
+    event.sender.send('asynchronous-reply-deleted-epic', 1)
   } catch (err) {
     console.log('error deleting epic')
     console.log(err)
+    event.sender.send('asynchronous-reply-deleted-epic', 0)
   }
  })
 })
+
+
+
+
+
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -163,6 +193,14 @@ function getEpicNaming(epic_obj) {
   return epic_name
 }
 
+function getOldEpicNaming(epic_obj) {
+  let name = epic_obj.old_name + '.json'
+  let epic_name = name.replaceAll(" ", "_")
+  return epic_name
+}
+
+// doesn't work b/c not async, need to sort that out to be able to abstract this
+/*
 function getAllEpics() {
   const fs = require('fs');
   var filepath = "./data/epics/";
@@ -181,6 +219,8 @@ function getAllEpics() {
       var obj = JSON.parse(fs.readFileSync(filepath + file));
       objArr.push(obj)
     })
+    console.log(objArr)
     return objArr
   })
 }
+*/

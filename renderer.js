@@ -13,12 +13,16 @@ const ipcRenderer = require('electron').ipcRenderer;
 // STATE
 var pages = [
     {"page": "home", "id": "epic_page"},
-    {"page": "create_epic", "id": "create_epic_page"}
+    {"page": "create_epic", "id": "create_epic_page"},
+    {"page": "edit_epic", "id": "edit_epic_page"},
+    {"page": "loading", "id": "loading_page"}
 ]
 
 var state = {
     "pages": pages,
-    "epics": []
+    "epics": [],
+    "selected_epic": undefined,
+    "loading": false
 }
 
 function updateState(key, value) {
@@ -32,6 +36,7 @@ function updateState(key, value) {
 // INITIAL LOAD LOGIC
 
 document.addEventListener("DOMContentLoaded", function(event) { 
+    /*
     ipcRenderer.send('get-epics', null)
 
     // hide elements not showing on first page -- inline sytle didn't work...
@@ -46,6 +51,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         updateState("epics", arg)
         generateEpicHtml(arg, state)
     })
+    */
+   getEpics()
 });
 
 
@@ -71,27 +78,101 @@ add_button.addEventListener('click', () => {
 
 // show epic page event listener has to be created after sidebar populated
 
-var update_button = document.getElementById('update_epic_button')
-update_button.addEventListener('click', () => {
+
+
+
+
+
+// UPDATE EPIC LOGIC
+var edit_button = document.getElementById('edit_epic_button')
+edit_button.addEventListener('click', () => {
     console.log('clicked!')
-    let epic = {
-        'name': 'Test Epic',
-        'description': 'This is a test description'
+
+    // show edit epic page, load in with selected epic data
+    populateEditPage(state.selected_epic)
+    cyclePage("edit_epic_page")
+    //populateEditPage(state.selected_epic)
+
+})
+var cancel_edit_button = document.getElementById('cancel_edit_button')
+cancel_edit_button.addEventListener('click', () => {
+    console.log('clicked!')
+
+    var cancel_confirmed = confirm("Are you sure you want to cancel these changes to the " + state.selected_epic.name + " epic?")
+    if (cancel_confirmed) {
+        populateEpicPage(state.selected_epic)
+        cyclePage("epic_page")
     }
-    ipcRenderer.send('update-epic', epic)
+})
+var save_button = document.getElementById('save_changes_button')
+save_button.addEventListener('click', () => {
+    console.log('save changes clicked')
+    var title = document.getElementById('edit_epic_page_title_input').value
+    var description = document.getElementById('edit_epic_page_description_input').value
+    let epic = {
+        'id': state.selected_epic.id,
+        'old_name': state.selected_epic.name,
+        'name': title,
+        'description': description
+    }
+
+    var update_confirmed = confirm("Are you sure you want to make these changes to the " + state.selected_epic.name + " epic?")
+    
+    if (update_confirmed) {
+        ipcRenderer.send('update-epic', epic)
+
+        cyclePage("loading_page")
+
+        ipcRenderer.on('asynchronous-reply-updated-epic', (event, arg) => {
+            console.log(arg)
+            if (arg) {
+                console.log('Successfully updated epic.')
+                getEpics()
+            } else {
+                console.log('There was an error on update of the epic.')
+                // TODO: maybe show error page
+            }
+        })
+    }
 })
 
+
+
+
+
+
+
+// DELETE EPIC LOGIC
 var delete_button = document.getElementById('delete_epic_button')
 delete_button.addEventListener('click', () => {
     console.log('clicked!')
-    let epic = {
-        'name': 'Test Epic',
-        'description': 'This is a test description'
+    console.log(state)
+    var delete_confirmed = confirm("Are you sure you want to delete " + state.selected_epic.name + " epic?")
+    if (delete_confirmed) {
+        ipcRenderer.send('delete-epic', state.selected_epic)
+
+        // TODO: need to put some kind of loading disable activity thing here
+        cyclePage("loading_page")
+        // disable here somehow
+
+        ipcRenderer.on('asynchronous-reply-deleted-epic', (event, arg) => {
+            console.log(arg)
+            if (arg) {
+                console.log('Successfully deleted epic.')
+                getEpics()
+            } else {
+                console.log('There was an error on delete of the epic.')
+                // TODO: maybe show error page
+            }
+        })
     }
-    ipcRenderer.send('delete-epic', epic)
 })
 
-// Create Epic Logic
+
+
+
+
+// CREATE EPIC LOGIC
 var create_epic_button = document.getElementById('create_epic_button')
 create_epic_button.addEventListener('click', () => {
     var title = document.getElementById('create_epic_page_title_input').value
@@ -148,12 +229,15 @@ function generateEpicHtml(epics, state) {
     document.querySelectorAll('.epic_link_sidebar').forEach(view_epic_button => {
         view_epic_button.addEventListener('click', () => {
             console.log('clicked!')
+
+             
             // TODO: check epic name versus existing epic names and if duplicate send back error?
             var view_epic
             var id = view_epic_button.id
             state.epics.forEach(function (epic, index) {
                 if (epic.id == id) {
                     view_epic = epic
+                    updateState("selected_epic", view_epic)
                 }
             })
 
@@ -161,7 +245,7 @@ function generateEpicHtml(epics, state) {
                 console.log('No epic exists with that id!')
             }
 
-            populateHomePage(view_epic)
+            populateEpicPage(view_epic)
             cyclePage("epic_page")
         })
     })
@@ -171,21 +255,29 @@ function generateEpicHtml(epics, state) {
     var next_id = (Math.max(...epic_ids)) + 1;
     updateState('next_id', next_id)
 
-    // populate main view with first epic
-    var current_epic = epics[0];
+    // populate main view with first epic or selected epic on case of update
+    var current_epic = state.selected_epic ? state.selected_epic : epics[0];
+    updateState("selected_epic", current_epic)
 
     console.log('populating epic_page')
-    populateHomePage(current_epic)
+    populateEpicPage(current_epic)
 
     console.log('cycling to epic_page')
     cyclePage('epic_page')
 }
 
 // meant to be a function that just runs initially
-function populateHomePage(epic) {
+function populateEpicPage(epic) {
     console.log('populating epic_page with ' + epic.name + ' ' + epic.description + '.')
     document.getElementById("epic_page_epic_name").textContent = epic.name
     document.getElementById("epic_page_epic_description").textContent = epic.description
+}
+
+function populateEditPage(epic) {
+    console.log('clicked edit')
+    console.log(epic)
+    document.getElementById("edit_epic_page_title_input").value = epic.name
+    document.getElementById("edit_epic_page_description_input").value = epic.description
 }
 
 function cyclePage(newPageId) {
@@ -196,5 +288,31 @@ function cyclePage(newPageId) {
         } else {
             document.getElementById(page.id).style.display = "none"
         }
+    })
+}
+
+function getEpics() {
+    ipcRenderer.send('get-epics', null)
+
+    console.log('sent get-epics')
+
+    // hide elements not showing on first page -- inline sytle didn't work...
+    cyclePage('epic_page') // this is just here to display none all the extra pages
+
+    // TODO - make the above dynamic - should have state keep track of display styles depending on state page
+
+    ipcRenderer.on('asynchronous-reply', (event, arg) => {
+        console.log('epics returned')
+        console.log(arg)
+        updateState("epics", arg)
+        if (state.selected_epic) {
+            state.epics.forEach(function (epic, index) {
+                if (epic.id == state.selected_epic.id) {
+                    updateState("selected_epic", epic)
+                }
+            })
+        }
+        
+        generateEpicHtml(arg, state)
     })
 }

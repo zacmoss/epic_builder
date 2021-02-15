@@ -21,7 +21,7 @@
 
     <div>
     <button id="add_epic_button">Create Epic</button>
-    <button id="update_epic_button">Update Epic</button>
+    <button id="edit_epic_button">Edit Epic</button>
     <button id="delete_epic_button">Delete Epic</button>
     <button id="home_button">Home</button>
     </div>
@@ -36,18 +36,32 @@
         <p id="epic_page_epic_description"></p>
       </div>
 
-      <!-- Create Epic Form -->
+      <!-- Create Epic Page -->
       <div id="create_epic_page">
-        <!--<form action="/action_page.php">-->
-            <label for="create_epic_page_title_input">Title:</label>
-            <input type="text" id="create_epic_page_title_input">
-            
-            <label for="create_epic_page_description_input">Description:</label>
-            <input type="text" id="create_epic_page_description_input">
-            
-            <button id="create_epic_button">Create Epic</button>
-            <!--<input type="submit" />-->
-        <!--</form>-->
+          <label for="create_epic_page_title_input">Title:</label>
+          <input type="text" id="create_epic_page_title_input">
+
+          <label for="create_epic_page_description_input">Description:</label>
+          <input type="text" id="create_epic_page_description_input">
+          
+          <button id="create_epic_button">Create Epic</button>
+      </div>
+
+      <!-- Edit Epic Page -->
+      <div id="edit_epic_page">
+        <label for="edit_epic_page_title_input">Title:</label>
+        <input type="text" id="edit_epic_page_title_input">
+        
+        <label for="edit_epic_page_description_input">Description:</label>
+        <input type="text" id="edit_epic_page_description_input">
+        
+        <button id="cancel_edit_button">Cancel</button>
+        <button id="save_changes_button">Save Changes</button>
+    </div>
+
+      <!-- Loading Screen -->
+      <div id="loading_page">
+        <p>Loading...</p>
       </div>
 
     </div>

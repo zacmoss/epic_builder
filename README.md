@@ -1,3 +1,15 @@
+## Technical
+
+The html in index.html acts as shells for content. In the future, I'd like to separate those out in modules under views, but we had issues with grabbing classes for html pages which hadn't been loaded yet.
+
+The client logic exists in renderer.js. The logic starts with the getEpics function which sends a request to the backend (main.js) for the existing epics in the data directory. The cyclePage function sets all "pages" (which are just divs on index.html) to display: none which are not the epics_page. So, essentially all those initial "pages" are there but set to display: none, except for the epics_page div. We then load in the first epic returned from the request to the backend into the epics_page div.
+
+The CRUD logic triggered by the buttons are just on click events set up in renderer.js. Each of them send a request to the backend (main.js) to do certain things. After each one, we currently just display the "loading_page" and send another request with the getEpics function which also re-loads the "epics_page".
+
+
+
+
+
 # electron-quick-start
 
 **Clone and run for a quick way to see Electron in action.**
