@@ -18,11 +18,28 @@ var pages = [
     {"page": "loading", "id": "loading_page"}
 ]
 
+/* 
+*
+* Should this just be in like settings somewhere
+* and be system-wide like you decide you want all
+* titles on epic to be 24px?
+*
+* Then, you would maybe save changes to those custom
+* settings before you leave the page?
+*
+
+custom styles structure = [
+    {"key": {"type": "class or id"}}
+]
+*/
+var custom_styles = {}
+
 var state = {
     "pages": pages,
     "epics": [],
     "selected_epic": undefined,
-    "loading": false
+    "loading": false,
+    "custom_styles": custom_styles
 }
 
 function updateState(key, value) {
@@ -185,6 +202,8 @@ create_epic_button.addEventListener('click', () => {
     }
     console.log(epic)
     ipcRenderer.send('add-epic', epic)
+    document.getElementById('create_epic_page_title_input').value = ''
+    document.getElementById('create_epic_page_description_input').value = ''
 })
 
 

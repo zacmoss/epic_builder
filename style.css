@@ -1,12 +1,144 @@
+/* palette
+*
+* #BE2023
+* rgb(190,32,35)
+*
+* #7B1710
+* rgb(123, 23, 16)
+*
+*
+*
+* #63171B
+* rgb(99, 23, 27)
+*
+* rgb(81, 19, 22)
+*/
+
+.primary_background {
+    background-color: rgb(81, 19, 22);
+}
+.lighter_primary_background {
+    background-color: rgb(120, 23, 27);
+}
+.lightest_primary_background {
+    background-color: rgb(190, 23, 27);
+}
+.primary_text_color {
+    color: white;
+    text-shadow: 1px 1px black;
+}
+
+
+button {
+    border: none;
+    outline: none;
+}
+button:hover {
+    cursor: pointer;
+}
+input {
+    outline: none;
+}
+textarea {
+    outline: none;
+}
+.epic_link_sidebar:hover {
+    cursor: pointer;
+}
+
+body {
+    padding: 0 .5rem;
+}
+
 #main_container {
     display: flex;
-    border: 3px green solid;
+    margin-top: .5rem;
+    /*border: 3px green solid;*/
 }
 #side_nav {
     width: 20%;
-    border: 2px blue solid;
+    height: 100%;
+    margin-right: .5rem;
+    padding: 0 .5rem;
+    border: 2px gray solid;
 }
 #main_view {
     width: 80%;
-    border: 2px red solid;
+    height: 100%;
+    margin-left: .5rem;
+    padding: .5rem 1rem;
+    border: 2px gray solid;
+}
+
+/* epic page styles */
+.epic_header_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /*padding: .5rem 1rem;*/
+    line-height: 200%;
+}
+.epic_buttons_container {
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+.epic_buttons_div {
+    /*float: right;*/
+}
+
+/*
+.action_button {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    padding: .25rem .5rem;
+    border: 1px lightgray solid;
+}
+*/
+.edit_epic_button {
+    /*background-color: gold;*/
+    margin-right: .25rem;
+}
+.delete_epic_button {
+    /*background-color: red;*/
+    margin-left: .25rem;
+}
+
+.edit_epic_title_container {
+    width: 50%;
+    /* old style
+    width: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: .5rem 1rem;
+    */
+}
+.edit_epic_title_span {
+    font-size: 24px;
+}
+.edit_epic_description_container {
+    width: 100vh;
+    /*
+    display: flex;
+    justify-content: center;
+    */
+    padding: .5rem 0;
+}
+
+
+
+/* create epic page styles */
+.create_epic_page_field_container {
+    margin-bottom: 2rem;
+}
+.big_button {
+    padding: .5rem 1rem;
+    font-size: 18px;
+}
+
+
+/* edit epic page styles */
+.edit_epic_page_field_container {
+    margin-bottom: 2rem;
 }

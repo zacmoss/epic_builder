@@ -3,67 +3,120 @@
   <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">-->
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src https:">-->
+    <meta name="referrer" content="strict-origin" />
     <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/eda91cca22.js" crossorigin="anonymous"></script>
+
     <title>Epic Builder</title>
   </head>
-  <body>
-    <div>
+  <body class="primary_background primary_text_color">
+    <h1 style="margin-bottom: 0; padding-bottom: 0">Epic Builder</h1>
+    <div style="margin-bottom: 2rem">
       Version <span id="app-version"></span>
     </div>
-    <h1>Epic Builder</h1>
-    <div>
+    <!--<div>
     We are using Node.js <span id="node-version"></span>,
     Chromium <span id="chrome-version"></span>,
     and Electron <span id="electron-version"></span>.
-    </div>
+    </div>-->
 
     <div>
-    <button id="add_epic_button">Create Epic</button>
-    <button id="edit_epic_button">Edit Epic</button>
-    <button id="delete_epic_button">Delete Epic</button>
-    <button id="home_button">Home</button>
+      <!--<button id="home_button" style="background-color: rgb(81, 19, 22)"><img src="./home.png" height="23px" width="21px"></img></button>-->
+      <button id="home_button" class="primary_background primary_text_color" title="Home"><i class="fas fa-home"></i></button>
+      <button id="add_epic_button" class="primary_background primary_text_color" title="Create Epic"><i class="fas fa-plus"></i></button>
     </div>
 
-    <div id="main_container">
-      <div id="side_nav"></div>
-      <!--<div id="main_view"></div>-->
+    <div id="main_container" class="primary_color">
+      <div id="side_nav" class="lighter_primary_background"></div>
+      <div id="main_view" class="lighter_primary_background">
 
-      <!-- Home Page With Recent Epic -->
-      <div id="epic_page">
-        <p id="epic_page_epic_name"></p>
-        <p id="epic_page_epic_description"></p>
-      </div>
-
-      <!-- Create Epic Page -->
-      <div id="create_epic_page">
-          <label for="create_epic_page_title_input">Title:</label>
-          <input type="text" id="create_epic_page_title_input">
-
-          <label for="create_epic_page_description_input">Description:</label>
-          <input type="text" id="create_epic_page_description_input">
+        <!-- Home Page With Recent Epic -->
+        <div id="epic_page">
+          <div class="epic_header_container">
+            <div class="edit_epic_title_container">
+              <!--<p id="epic_page_epic_name" class="edit_epic_title_p"></p>-->
+              <span id="epic_page_epic_name" class="edit_epic_title_span"></span>
+            </div>
+            <div class="epic_buttons_container">
+              <div class="epic_buttons_div">
+                <button id="edit_epic_button" class="lighter_primary_background primary_text_color edit_epic_button" title="Edit Epic"><i class="far fa-edit"></i></button>
+                <button id="delete_epic_button" class="lighter_primary_background primary_text_color delete_epic_button" title="Delete Epic"><i class="fas fa-trash"></i></button>
+                <!--<button id="edit_epic_button" class="action_button edit_epic_button">O</button>
+                <button id="delete_epic_button" class="action_button delete_epic_button">X</button>-->
+              </div>
+            </div>
+          </div>
           
-          <button id="create_epic_button">Create Epic</button>
+          <div class="edit_epic_description_container">
+            <p id="epic_page_epic_description" class="edit_epic_description_p"></p>
+          </div>
+        </div>
+
+        <!-- Create Epic Page -->
+        <div id="create_epic_page">
+          <div class="create_epic_page_field_container">
+            <div>
+              <label for="create_epic_page_title_input">Title</label>
+            </div>
+            <div>
+              <input type="text" id="create_epic_page_title_input">
+            </div>
+          </div>
+
+          <div class="create_epic_page_field_container">
+            <div>
+              <label for="create_epic_page_description_input">Description</label>
+            </div>
+            <div>
+              <textarea rows="4" cols="50" type="text" id="create_epic_page_description_input"></textarea>
+            </div>
+          </div>
+          
+          <button id="create_epic_button" class="primary_background primary_text_color big_button">Create Epic</button>
+        </div>
+
+        <!-- Edit Epic Page -- really kind of a duplicate of create epic page... -->
+        <div id="edit_epic_page">
+          <!--
+          <div><label for="edit_epic_page_title_input">Title:</label></div>
+          <div><input type="text" id="edit_epic_page_title_input"></div>
+          
+          <label for="edit_epic_page_description_input">Description:</label>
+          <input type="text" id="edit_epic_page_description_input">
+          
+          <button id="cancel_edit_button">Cancel</button>
+          <button id="save_changes_button">Save Changes</button>
+          -->
+          <div class="edit_epic_page_field_container">
+            <div>
+              <label for="edit_epic_page_title_input">Title</label>
+            </div>
+            <div>
+              <input type="text" id="edit_epic_page_title_input">
+            </div>
+          </div>
+
+          <div class="edit_epic_page_field_container">
+            <div>
+              <label for="edit_epic_page_description_input">Description</label>
+            </div>
+            <div>
+              <textarea rows="4" cols="50" type="text" id="edit_epic_page_description_input"></textarea>
+            </div>
+          </div>
+          
+          <button id="cancel_edit_button" class="primary_background primary_text_color big_button">Cancel</button>
+          <button id="save_changes_button" class="primary_background primary_text_color big_button">Save Changes</button>
+        </div>
+        <!-- Loading Screen -->
+        <div id="loading_page">
+          <p>Loading...</p>
+        </div>
+
       </div>
-
-      <!-- Edit Epic Page -->
-      <div id="edit_epic_page">
-        <label for="edit_epic_page_title_input">Title:</label>
-        <input type="text" id="edit_epic_page_title_input">
-        
-        <label for="edit_epic_page_description_input">Description:</label>
-        <input type="text" id="edit_epic_page_description_input">
-        
-        <button id="cancel_edit_button">Cancel</button>
-        <button id="save_changes_button">Save Changes</button>
-    </div>
-
-      <!-- Loading Screen -->
-      <div id="loading_page">
-        <p>Loading...</p>
-      </div>
-
     </div>
 
     
