@@ -70,6 +70,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     })
     */
    getEpics()
+
+   // Quill Js Logic
+   var quill = new Quill('#create_epic_page_description_input', {
+        theme: 'snow'
+    });
+
+    updateState("quill", quill);
 });
 
 
@@ -193,7 +200,11 @@ delete_button.addEventListener('click', () => {
 var create_epic_button = document.getElementById('create_epic_button')
 create_epic_button.addEventListener('click', () => {
     var title = document.getElementById('create_epic_page_title_input').value
-    var description = document.getElementById('create_epic_page_description_input').value
+    //var description = document.getElementById('create_epic_page_description_input').value
+    var delta = state.quill.getContents();
+    console.log('quill delta obj')
+    console.log(delta)
+    var description = 'testing quill';
     console.log('clicked create epic!')
     let epic = {
         'id': state.next_id,
