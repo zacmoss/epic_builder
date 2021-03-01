@@ -9,6 +9,7 @@ The CRUD logic triggered by the buttons are just on click events set up in rende
 
 
 ## To Do
+- Load of changed status not working, fix dat
 - Fix issue with large description for epic and attempt at scrollable height
 - Fix bug, on delete of epic, local state loads the old deleted epic if it was the first one
 - Logic that allows ranking of epics or starring on epic page, starred epic would be first to show

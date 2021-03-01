@@ -159,6 +159,15 @@ save_button.addEventListener('click', () => {
         })
     }
 })
+var status_select = document.querySelector('#edit_epic_page_status_select')
+status_select.addEventListener('change', (event) => {
+    var updated_epic = state.selected_epic
+    updated_epic.status = event.target.value
+    console.log('status updated to')
+    console.log(updated_epic)
+    updateState("selected_epic", updated_epic)
+    ipcRenderer.send('update-epic', state.selected_epic)
+});
 
 
 
@@ -209,7 +218,8 @@ create_epic_button.addEventListener('click', () => {
     let epic = {
         'id': state.next_id,
         'name': title,
-        'description': description
+        'description': description,
+        'status': "todo"
     }
     console.log(epic)
     ipcRenderer.send('add-epic', epic)
@@ -308,6 +318,7 @@ function populateEditPage(epic) {
     console.log(epic)
     document.getElementById("edit_epic_page_title_input").value = epic.name
     document.getElementById("edit_epic_page_description_input").value = epic.description
+    document.getElementById("edit_epic_page_status_select").value = epic.status // this is not working
 }
 
 function cyclePage(newPageId) {
@@ -346,3 +357,4 @@ function getEpics() {
         generateEpicHtml(arg, state)
     })
 }
+

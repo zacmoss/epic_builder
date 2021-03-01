@@ -39,6 +39,16 @@
             <div class="edit_epic_title_container">
               <!--<p id="epic_page_epic_name" class="edit_epic_title_p"></p>-->
               <span id="epic_page_epic_name" class="edit_epic_title_span"></span>
+              <div class="edit_epic_page_field_container">
+                <div>
+                  <select name="status" id="edit_epic_page_status_select">
+                    <option value="todo">To Do</option>
+                    <option value="inprogress">In Progress</option>
+                    <option value="complete">Complete</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </div>
+              </div>
             </div>
             <div class="epic_buttons_container">
               <div class="epic_buttons_div">
@@ -82,22 +92,26 @@
 
         <!-- Edit Epic Page -- really kind of a duplicate of create epic page... -->
         <div id="edit_epic_page">
-          <!--
-          <div><label for="edit_epic_page_title_input">Title:</label></div>
-          <div><input type="text" id="edit_epic_page_title_input"></div>
-          
-          <label for="edit_epic_page_description_input">Description:</label>
-          <input type="text" id="edit_epic_page_description_input">
-          
-          <button id="cancel_edit_button">Cancel</button>
-          <button id="save_changes_button">Save Changes</button>
-          -->
           <div class="edit_epic_page_field_container">
             <div>
               <label for="edit_epic_page_title_input">Title</label>
             </div>
             <div>
               <input type="text" id="edit_epic_page_title_input">
+            </div>
+          </div>
+
+          <div class="edit_epic_page_field_container">
+            <div>
+              <label for="edit_epic_page_status_select">Status</label>
+            </div>
+            <div>
+              <select name="status" id="edit_epic_page_status_select">
+                <option value="todo">To Do</option>
+                <option value="inprogress">In Progress</option>
+                <option value="complete">Complete</option>
+                <option value="closed">Closed</option>
+              </select>
             </div>
           </div>
 

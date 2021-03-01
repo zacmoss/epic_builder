@@ -134,7 +134,6 @@ app.whenReady().then(() => {
    console.log(arg)
   let filepath = './data/epics/'
   let old_epic_name = getOldEpicNaming(arg)
-  //let new_data = arg
   delete arg['old_name']
   try {
     fs.unlinkSync(filepath + old_epic_name);
@@ -189,13 +188,15 @@ app.on('window-all-closed', function () {
 // code. You can also put them in separate files and require them here.
 
 function getEpicNaming(epic_obj) {
+  console.log('epic_obj')
+  console.log(epic_obj)
   let name = epic_obj.name + '.json'
   let epic_name = name.replaceAll(" ", "_")
   return epic_name
 }
 
 function getOldEpicNaming(epic_obj) {
-  let name = epic_obj.old_name + '.json'
+  let name = epic_obj.old_name ? epic_obj.old_name + '.json' : epic_obj.name + '.json'
   let epic_name = name.replaceAll(" ", "_")
   return epic_name
 }
