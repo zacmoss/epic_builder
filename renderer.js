@@ -213,7 +213,7 @@ create_epic_button.addEventListener('click', () => {
     var delta = state.quill.getContents();
     console.log('quill delta obj')
     console.log(delta)
-    var description = 'testing quill';
+    var description = delta.ops[0].insert;
     console.log('clicked create epic!')
     let epic = {
         'id': state.next_id,
@@ -249,20 +249,29 @@ function generateEpicHtml(epics, state) {
     var epic_ids = []
 
     // populate epics side nav
-    epics.forEach(function (epic, index) {
+    if (epics.length) {
+        epics.forEach(function (epic, index) {
+            var side_div = document.createElement("div");
+            var title_text_node = document.createElement("P");
+            title_text_node.innerText = epic.name;
+            title_text_node.className = "epic_link_sidebar"
+            title_text_node.id = epic.id
+    
+            // get all epic ids
+            console.log("next number id is " + epic.id)
+            epic_ids.push(epic.id)
+    
+            side_div.appendChild(title_text_node);
+            document.getElementById("side_nav").appendChild(side_div);
+        })
+    } else {
         var side_div = document.createElement("div");
         var title_text_node = document.createElement("P");
-        title_text_node.innerText = epic.name;
+        title_text_node.innerText = "No epics yet";
         title_text_node.className = "epic_link_sidebar"
-        title_text_node.id = epic.id
-
-        // get all epic ids
-        console.log("next number id is " + epic.id)
-        epic_ids.push(epic.id)
-
         side_div.appendChild(title_text_node);
         document.getElementById("side_nav").appendChild(side_div);
-    })
+    }
 
     // TODO - break the below into a helper function?
     // Show epic page on click of sidebar link
@@ -290,20 +299,33 @@ function generateEpicHtml(epics, state) {
         })
     })
     
+    console.log('getting next id')
+    console.log(epic_ids)
 
     // get next epic id number
-    var next_id = (Math.max(...epic_ids)) + 1;
+    var next_id = epic_ids.length ? (Math.max(...epic_ids)) + 1 : 1;
+    //var next_id = (Math.max(...epic_ids)) + 1;
     updateState('next_id', next_id)
+
+    console.log('next id is:' + next_id)
 
     // populate main view with first epic or selected epic on case of update
     var current_epic = state.selected_epic ? state.selected_epic : epics[0];
     updateState("selected_epic", current_epic)
 
-    console.log('populating epic_page')
-    populateEpicPage(current_epic)
-
-    console.log('cycling to epic_page')
-    cyclePage('epic_page')
+    if (epics.length) {
+        console.log('populating epic_page')
+        populateEpicPage(current_epic)
+    }
+    
+    if (epics.length) {
+        console.log('cycling to epic_page')
+        cyclePage('epic_page')
+    } else {
+        console.log('cycling to create_epic_page')
+        cyclePage('create_epic_page')
+    }
+    
 }
 
 // meant to be a function that just runs initially
@@ -311,6 +333,7 @@ function populateEpicPage(epic) {
     console.log('populating epic_page with ' + epic.name + ' ' + epic.description + '.')
     document.getElementById("epic_page_epic_name").textContent = epic.name
     document.getElementById("epic_page_epic_description").textContent = epic.description
+    document.getElementById("edit_epic_page_status_select").value = epic.status
 }
 
 function populateEditPage(epic) {
@@ -318,7 +341,7 @@ function populateEditPage(epic) {
     console.log(epic)
     document.getElementById("edit_epic_page_title_input").value = epic.name
     document.getElementById("edit_epic_page_description_input").value = epic.description
-    document.getElementById("edit_epic_page_status_select").value = epic.status // this is not working
+    document.getElementById("edit_epic_page_status_select").value = epic.status
 }
 
 function cyclePage(newPageId) {
