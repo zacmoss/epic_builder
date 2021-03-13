@@ -87,6 +87,13 @@ body {
 .epic_buttons_div {
     /*float: right;*/
 }
+.epic_description_container {
+    width: 100vh;
+    padding: .5rem 0;
+}
+
+
+
 
 /*
 .action_button {

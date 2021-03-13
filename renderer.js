@@ -75,8 +75,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
    var quill = new Quill('#create_epic_page_description_input', {
         theme: 'snow'
     });
+    var edit_quill = new Quill('#edit_epic_page_description_input', {
+        theme: 'snow'
+    });
 
     updateState("quill", quill);
+    updateState("edit_quill", edit_quill);
 });
 
 
@@ -101,6 +105,18 @@ add_button.addEventListener('click', () => {
 })
 
 // show epic page event listener has to be created after sidebar populated
+
+
+
+
+// EPIC PAGE EVENT LISTENERS
+var status_select = document.querySelector('#epic_page_status_select')
+status_select.addEventListener('change', (event) => {
+    var updated_epic = state.selected_epic
+    updated_epic.status = event.target.value
+    updateState("selected_epic", updated_epic) // updates local state
+    ipcRenderer.send('update-epic-status', state.selected_epic) // updates back end data
+});
 
 
 
@@ -132,12 +148,17 @@ var save_button = document.getElementById('save_changes_button')
 save_button.addEventListener('click', () => {
     console.log('save changes clicked')
     var title = document.getElementById('edit_epic_page_title_input').value
-    var description = document.getElementById('edit_epic_page_description_input').value
+    var delta = state.edit_quill.getContents();
+    var description = state.edit_quill.root.innerHTML 
+    //var description = document.getElementById('edit_epic_page_description_input').value
+    var status = document.getElementById("edit_epic_page_status_select").value
     let epic = {
         'id': state.selected_epic.id,
         'old_name': state.selected_epic.name,
         'name': title,
-        'description': description
+        'description': description,
+        'description_delta': delta,
+        'status': status
     }
 
     var update_confirmed = confirm("Are you sure you want to make these changes to the " + state.selected_epic.name + " epic?")
@@ -159,6 +180,8 @@ save_button.addEventListener('click', () => {
         })
     }
 })
+
+// edit page status select onclick
 var status_select = document.querySelector('#edit_epic_page_status_select')
 status_select.addEventListener('change', (event) => {
     var updated_epic = state.selected_epic
@@ -166,7 +189,7 @@ status_select.addEventListener('change', (event) => {
     console.log('status updated to')
     console.log(updated_epic)
     updateState("selected_epic", updated_epic)
-    ipcRenderer.send('update-epic', state.selected_epic)
+    ipcRenderer.send('update-epic-status', state.selected_epic)
 });
 
 
@@ -211,14 +234,16 @@ create_epic_button.addEventListener('click', () => {
     var title = document.getElementById('create_epic_page_title_input').value
     //var description = document.getElementById('create_epic_page_description_input').value
     var delta = state.quill.getContents();
-    console.log('quill delta obj')
-    console.log(delta)
-    var description = delta.ops[0].insert;
+    //console.log('quill delta obj')
+    //console.log(delta)
+    var description = state.quill.root.innerHTML
+    console.log(state.quill.root)
     console.log('clicked create epic!')
     let epic = {
         'id': state.next_id,
         'name': title,
         'description': description,
+        'description_delta': delta,
         'status': "todo"
     }
     console.log(epic)
@@ -332,15 +357,18 @@ function generateEpicHtml(epics, state) {
 function populateEpicPage(epic) {
     console.log('populating epic_page with ' + epic.name + ' ' + epic.description + '.')
     document.getElementById("epic_page_epic_name").textContent = epic.name
-    document.getElementById("epic_page_epic_description").textContent = epic.description
-    document.getElementById("edit_epic_page_status_select").value = epic.status
+    //document.getElementById("epic_page_epic_description").textContent = epic.description
+    document.getElementById("epic_page_epic_description").innerHTML = epic.description
+    document.getElementById("epic_page_status_select").value = epic.status
 }
 
 function populateEditPage(epic) {
     console.log('clicked edit')
     console.log(epic)
     document.getElementById("edit_epic_page_title_input").value = epic.name
-    document.getElementById("edit_epic_page_description_input").value = epic.description
+    //document.getElementById("edit_epic_page_description_input").value = epic.description
+    //document.getElementById("edit_epic_page_description_input").innerHTML = epic.description
+    state.edit_quill.setContents(epic.description_delta)
     document.getElementById("edit_epic_page_status_select").value = epic.status
 }
 

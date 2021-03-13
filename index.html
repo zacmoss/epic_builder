@@ -42,7 +42,7 @@
               <div class="edit_epic_page_field_container">
                 <div>
                   <!-- Id naming is really confusing here...we target the same id whether epic page or edit page... -->
-                  <select name="status" id="edit_epic_page_status_select">
+                  <select name="status" id="epic_page_status_select">
                     <option value="todo">To Do</option>
                     <option value="inprogress">In Progress</option>
                     <option value="complete">Complete</option>
@@ -61,8 +61,8 @@
             </div>
           </div>
           
-          <div class="edit_epic_description_container">
-            <p id="epic_page_epic_description" class="edit_epic_description_p"></p>
+          <div class="epic_description_container">
+            <p id="epic_page_epic_description"></p>
           </div>
         </div>
 
@@ -116,6 +116,7 @@
             </div>
           </div>
 
+          <!--
           <div class="edit_epic_page_field_container">
             <div>
               <label for="edit_epic_page_description_input">Description</label>
@@ -123,6 +124,10 @@
             <div>
               <textarea rows="4" cols="50" type="text" id="edit_epic_page_description_input"></textarea>
             </div>
+          </div>
+          -->
+
+          <div id="edit_epic_page_description_input">
           </div>
           
           <button id="cancel_edit_button" class="primary_background primary_text_color big_button">Cancel</button>
@@ -142,9 +147,14 @@
     <script type="module" src="./renderer.js"></script>
     <script src="./quill.js"></script>
     <script>
+      /*
       var quill = new Quill('#create_epic_page_description_input', {
         theme: 'snow'
       });
+      var edit_quill = new Quill('#edit_epic_page_description_input', {
+        theme: 'snow'
+      });
+      */
     </script>
   </body>
 </html>

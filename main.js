@@ -151,6 +151,25 @@ app.whenReady().then(() => {
 
 
 
+ // UPDATE EPIC STATUS ONLY
+ ipcMain.on('update-epic-status', (event, arg) => {
+  let filepath = './data/epics/'
+  let old_epic_name = getOldEpicNaming(arg)
+  delete arg['old_name']
+  try {
+    fs.unlinkSync(filepath + old_epic_name);
+    console.log('successfully deleted ' + filepath + old_epic_name);
+    let new_epic_name = getEpicNaming(arg)
+    fs.writeFileSync(path.resolve(filepath, new_epic_name), JSON.stringify(arg))
+    console.log('successfully updated epic')
+  } catch (err) {
+    console.log('error updating epic')
+    console.log(err)
+  }
+ })
+
+
+
 
 
  // DELETE EPIC LOGIC
