@@ -250,6 +250,7 @@ create_epic_button.addEventListener('click', () => {
     ipcRenderer.send('add-epic', epic)
     document.getElementById('create_epic_page_title_input').value = ''
     document.getElementById('create_epic_page_description_input').value = ''
+    state.quill.setContents([]);
 })
 
 
@@ -333,6 +334,18 @@ function generateEpicHtml(epics, state) {
     updateState('next_id', next_id)
 
     console.log('next id is:' + next_id)
+
+    if (state.selected_epic) {
+        var selectedStillExists = false
+        state.epics.forEach(function (epic, index) {
+            if (state.selected_epic.id == epic.id) {
+                selectedStillExists = true
+            }
+        })
+        if (!selectedStillExists) {
+            updateState("selected_epic", state.epics[0])
+        }
+    }
 
     // populate main view with first epic or selected epic on case of update
     var current_epic = state.selected_epic ? state.selected_epic : epics[0];
